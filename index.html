@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KNOEZE Beat Machine</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="drop-flash" id="dropFlash"></div>
+
+  <main class="app">
+    <header class="top">
+      <div class="title-block">
+        <p class="eyebrow">ANAGRAM SAMPLER</p>
+        <h1>KNOEZE<br class="mobile-break" /> BEAT MACHINE</h1>
+        <p class="lead">
+          nekozeをシャッフルして、knoezeのビートを完成させよう。
+        </p>
+
+        <a class="track-card" href="https://www.youtube.com/watch?v=fLp2TZi7Qyk" target="_blank" rel="noopener noreferrer" aria-label="ミライトウキョウSAをYouTubeで開く">
+          <div class="cover-art">
+            <span>NOEZ</span>
+          </div>
+          <div class="track-main">
+            <span class="track-label">TRACK INSPIRED BY</span>
+            <strong>ミライトウキョウSA</strong>
+            <p>のえず</p>
+          </div>
+        </div>
+      </a>
+
+      <div class="status-panel">
+        <div>
+          <span>KEY</span>
+          <strong>G♯/A♭</strong>
+        </div>
+        <div>
+          <span>DURATION</span>
+          <strong>3:52</strong>
+        </div>
+        <div>
+          <span>BPM</span>
+          <strong>180</strong>
+        </div>
+      </div>
+    </header>
+
+    <section class="machine" id="machine">
+      <div class="deck">
+        <div class="deck-head">
+          <p>Current Sequence</p>
+          <div class="leds" aria-hidden="true">
+            <span></span><span></span><span></span><span></span>
+          </div>
+        </div>
+
+        <div class="pads" id="currentWord"></div>
+
+        <div class="sequencer" id="sequencer">
+          <span></span><span></span><span></span><span></span><span></span><span></span>
+          <span></span><span></span><span></span><span></span><span></span><span></span>
+          <span></span><span></span><span></span><span></span>
+        </div>
+
+        <div class="meter-area">
+          <div>
+            <p class="small-label">MATCH LEVEL</p>
+            <div class="bar">
+              <div class="bar-inner" id="matchBar"></div>
+            </div>
+          </div>
+          <div class="vu">
+            <span></span><span></span><span></span><span></span><span></span>
+          </div>
+        </div>
+      </div>
+
+      <aside class="side">
+        <div class="message">
+          <p class="message-title" id="messageTitle">READY</p>
+          <p class="message-text" id="messageText">
+            PLAYを押して、knoezeのドロップを狙ってください。
+          </p>
+        </div>
+
+        <div class="target-chip-large">
+          <span>TARGET</span>
+          <strong>knoeze</strong>
+        </div>
+
+        <div class="promo-box">
+          <label for="promoCode">PROMO CODE</label>
+          <input id="promoCode" type="text" inputmode="numeric" autocomplete="off" placeholder="code" />
+        </div>
+
+        <button id="shuffleBtn" class="play-button">
+          <span class="play-icon">▶</span>
+          PLAY / SHUFFLE
+        </button>
+
+        <div class="button-row">
+          <button class="ghost" id="copyBtn">COPY RESULT</button>
+          <button class="ghost danger" id="resetBtn">RESET</button>
+        </div>
+      </aside>
+    </section>
+
+    <section class="stats">
+      <div class="stat">
+        <span>TAKE</span>
+        <strong id="attemptCount">0</strong>
+      </div>
+      <div class="stat">
+        <span>MATCH</span>
+        <strong id="matchCount">0/6</strong>
+      </div>
+      <div class="stat">
+        <span>BEST TAKE</span>
+        <strong id="bestRecord">--</strong>
+      </div>
+      <div class="stat">
+        <span>RATE</span>
+        <strong>1/360</strong>
+      </div>
+    </section>
+
+    <section class="compare">
+      <div>
+        <h2>Target Pads</h2>
+        <p>緑色のパッドは、knoezeと同じ位置にあります。</p>
+      </div>
+      <div class="target-row" id="compareRow"></div>
+    </section>
+
+    <section class="history-section">
+      <div class="history-head">
+        <div>
+          <h2>Recent Takes</h2>
+          <p>直近20回のシャッフル履歴です。</p>
+        </div>
+        <button class="ghost" id="clearBestBtn">CLEAR BEST</button>
+      </div>
+      <div class="history" id="history"></div>
+    </section>
+  </main>
+
+  <div class="drop-overlay" id="dropOverlay" aria-hidden="true">
+    <div class="drop-card">
+      <p>DROP!!</p>
+      <h2>KNOEZE</h2>
+      <span>unlocked</span>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">copied</div>
+
+  <script src="script.js"></script>
+</body>
+</html>
