@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>nekoze Anagram</title>
+  <style>
+    :root {
+      --bg: #080c18;
+      --panel: rgba(255, 255, 255, 0.08);
+      --panel-strong: rgba(255, 255, 255, 0.13);
+      --line: rgba(255, 255, 255, 0.16);
+      --text: #f8fafc;
+      --muted: #a8b3c7;
+      --accent: #67e8f9;
+      --accent-2: #a78bfa;
+      --danger: #fb7185;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(103, 232, 249, 0.18), transparent 32rem),
+        radial-gradient(circle at bottom right, rgba(167, 139, 250, 0.18), transparent 32rem),
+        var(--bg);
+    }
+
+    .container {
+      width: min(1100px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 48px 0;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .label {
+      margin: 0 0 12px;
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.32em;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(38px, 7vw, 78px);
+      line-height: 1;
+      letter-spacing: -0.06em;
+    }
+
+    .lead {
+      max-width: 680px;
+      margin: 20px auto 0;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.25fr 0.75fr;
+      gap: 22px;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      background: var(--panel);
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
+      backdrop-filter: blur(14px);
+    }
+
+    .display-label {
+      margin: 0 0 10px;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .word-display {
+      min-height: 190px;
+      display: grid;
+      place-items: center;
+      padding: 26px;
+      border: 1px solid rgba(103, 232, 249, 0.26);
+      border-radius: 24px;
+      background: rgba(3, 7, 18, 0.78);
+      box-shadow: inset 0 0 28px rgba(103, 232, 249, 0.06);
+      overflow-wrap: anywhere;
+    }
+
+    .word {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: clamp(54px, 9vw, 106px);
+      font-weight: 950;
+      letter-spacing: 0.14em;
+      color: var(--accent);
+      text-shadow: 0 0 28px rgba(103, 232, 249, 0.3);
+      animation: pop 0.28s ease;
+    }
+
+    @keyframes pop {
+      from {
+        transform: translateY(8px) scale(0.98);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+    }
+
+    .controls {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    button {
+      width: 100%;
+      min-height: 54px;
+      border: 0;
+      border-radius: 18px;
+      cursor: pointer;
+      color: #07111f;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      font-size: 15px;
+      font-weight: 900;
+      transition: transform 0.18s ease, filter 0.18s ease, background 0.18s ease;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.07);
+    }
+
+    button.secondary {
+      color: var(--text);
+      background: var(--panel-strong);
+      border: 1px solid var(--line);
+    }
+
+    button.danger {
+      color: var(--text);
+      background: rgba(251, 113, 133, 0.16);
+      border: 1px solid rgba(251, 113, 133, 0.32);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin: 22px 0;
+    }
+
+    .stat {
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: var(--panel);
+    }
+
+    .stat p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .stat strong {
+      display: block;
+      margin-top: 8px;
+      font-size: 34px;
+      line-height: 1;
+    }
+
+    .list-section {
+      margin-top: 28px;
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      background: rgba(255, 255, 255, 0.055);
+    }
+
+    .list-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 18px;
+      margin-bottom: 16px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 25px;
+      letter-spacing: -0.03em;
+    }
+
+    .hint {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    input {
+      width: min(330px, 100%);
+      height: 48px;
+      padding: 0 16px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      color: var(--text);
+      background: rgba(3, 7, 18, 0.62);
+      outline: none;
+      font-size: 15px;
+    }
+
+    input:focus {
+      border-color: rgba(103, 232, 249, 0.8);
+      box-shadow: 0 0 0 4px rgba(103, 232, 249, 0.1);
+    }
+
+    .count {
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .grid {
+      max-height: 520px;
+      overflow: auto;
+      display: grid;
+      grid-template-columns: repeat(8, minmax(0, 1fr));
+      gap: 10px;
+      padding-right: 4px;
+    }
+
+    .chip {
+      min-height: 42px;
+      color: var(--text);
+      background: rgba(3, 7, 18, 0.62);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 14px;
+      letter-spacing: 0.02em;
+    }
+
+    .chip.active {
+      color: #07111f;
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      transform: translateX(-50%) translateY(20px);
+      padding: 12px 18px;
+      border-radius: 999px;
+      color: var(--text);
+      background: rgba(15, 23, 42, 0.92);
+      border: 1px solid var(--line);
+      opacity: 0;
+      pointer-events: none;
+      transition: 0.22s ease;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @media (max-width: 840px) {
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .list-head {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      input {
+        width: 100%;
+      }
+
+      .grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 420px) {
+      .container {
+        width: min(100% - 22px, 1100px);
+        padding: 30px 0;
+      }
+
+      .hero,
+      .list-section {
+        border-radius: 22px;
+        padding: 16px;
+      }
+
+      .word-display {
+        min-height: 150px;
+      }
+
+      .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <header>
+      <p class="label">ANAGRAM MAKER</p>
+      <h1>nekoze Anagram</h1>
+      <p class="lead">
+        「nekoze」の文字を自由に入れ替えて、ランダムな並びや全パターンを確認できます。
+      </p>
+    </header>
+
+    <section class="hero">
+      <div>
+        <p class="display-label">現在の並び</p>
+        <div class="word-display">
+          <div class="word" id="currentWord">nekoze</div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button id="shuffleBtn">ランダムに入れ替える</button>
+        <button class="secondary" id="copyBtn">現在の文字をコピー</button>
+        <button class="danger" id="resetBtn">nekoze に戻す</button>
+      </div>
+    </section>
+
+    <section class="stats">
+      <div class="stat">
+        <p>元の単語</p>
+        <strong>nekoze</strong>
+      </div>
+      <div class="stat">
+        <p>文字数</p>
+        <strong>6</strong>
+      </div>
+      <div class="stat">
+        <p>全アナグラム数</p>
+        <strong id="totalCount">0</strong>
+      </div>
+    </section>
+
+    <section class="list-section">
+      <div class="list-head">
+        <div>
+          <h2>全アナグラム一覧</h2>
+          <p class="hint">気に入ったものを押すと、上の表示に反映されます。</p>
+        </div>
+        <input id="searchInput" type="text" placeholder="例: neko / ze" />
+      </div>
+
+      <p class="count" id="visibleCount">表示中: 0 / 0</p>
+      <div class="grid" id="anagramGrid"></div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast">コピーしました</div>
+
+  <script>
+    const sourceWord = "nekoze";
+    let currentWord = sourceWord;
+    let allAnagrams = [];
+
+    const currentWordEl = document.getElementById("currentWord");
+    const shuffleBtn = document.getElementById("shuffleBtn");
+    const copyBtn = document.getElementById("copyBtn");
+    const resetBtn = document.getElementById("resetBtn");
+    const searchInput = document.getElementById("searchInput");
+    const anagramGrid = document.getElementById("anagramGrid");
+    const totalCount = document.getElementById("totalCount");
+    const visibleCount = document.getElementById("visibleCount");
+    const toast = document.getElementById("toast");
+
+    function getPermutations(word) {
+      const result = new Set();
+
+      function permute(prefix, rest) {
+        if (rest.length === 0) {
+          result.add(prefix);
+          return;
+        }
+
+        for (let i = 0; i < rest.length; i++) {
+          permute(prefix + rest[i], rest.slice(0, i) + rest.slice(i + 1));
+        }
+      }
+
+      permute("", word);
+      return Array.from(result).sort();
+    }
+
+    function shuffleWord(word) {
+      const chars = word.split("");
+
+      for (let i = chars.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [chars[i], chars[j]] = [chars[j], chars[i]];
+      }
+
+      return chars.join("");
+    }
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+
+      setTimeout(() => {
+        toast.classList.remove("show");
+      }, 1200);
+    }
+
+    function setCurrentWord(word) {
+      currentWord = word;
+      currentWordEl.textContent = word;
+      currentWordEl.style.animation = "none";
+      currentWordEl.offsetHeight;
+      currentWordEl.style.animation = "";
+      renderAnagrams();
+    }
+
+    function renderAnagrams() {
+      const query = searchInput.value.trim().toLowerCase();
+      const filtered = query
+        ? allAnagrams.filter((word) => word.includes(query))
+        : allAnagrams;
+
+      anagramGrid.innerHTML = "";
+
+      filtered.forEach((word) => {
+        const button = document.createElement("button");
+        button.className = "chip" + (word === currentWord ? " active" : "");
+        button.textContent = word;
+        button.addEventListener("click", () => {
+          setCurrentWord(word);
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+        anagramGrid.appendChild(button);
+      });
+
+      visibleCount.textContent = `表示中: ${filtered.length} / ${allAnagrams.length}`;
+    }
+
+    shuffleBtn.addEventListener("click", () => {
+      let next = shuffleWord(sourceWord);
+      let guard = 0;
+
+      while (next === currentWord && guard < 20) {
+        next = shuffleWord(sourceWord);
+        guard++;
+      }
+
+      setCurrentWord(next);
+    });
+
+    copyBtn.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(currentWord);
+        showToast("コピーしました");
+      } catch {
+        showToast("コピーできませんでした");
+      }
+    });
+
+    resetBtn.addEventListener("click", () => {
+      setCurrentWord(sourceWord);
+    });
+
+    searchInput.addEventListener("input", renderAnagrams);
+
+    allAnagrams = getPermutations(sourceWord);
+    totalCount.textContent = allAnagrams.length;
+    setCurrentWord(sourceWord);
+  </script>
+</body>
+</html>
